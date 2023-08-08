@@ -2,17 +2,94 @@ import React, { useEffect, useReducer, useContext, createContext } from "react";
 
 import axios from "axios";
 
-const initialState = {
-  questionNumber: 0,
-  question: [],
-  point: 0,
-  time: 450,
-};
-
 const MainProvider = createContext();
 
+const initialState = {
+  data: [],
+
+  nickname: "",
+
+  index: 0,
+  userPoint: 0,
+
+  loadingData: false,
+  answer: null,
+  // intro, active, error, finished ==> 4
+  currentStatus: "intro",
+};
+
 function MainContext({ children }) {
-  ///// fetch question data start
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case "isLoading/start":
+        return {
+          ...state,
+          loadingData: true,
+        };
+
+      case "isLoading/finish":
+        return {
+          ...state,
+          loadingData: false,
+        };
+
+      case "nickname":
+        return {
+          ...state,
+          nickname: action.payload,
+        };
+
+      case "questionData":
+        return {
+          ...state,
+          data: action.payload,
+        };
+
+      case "error":
+        return {
+          ...state,
+          currentStatus: error,
+        };
+
+      case "startQuiz":
+        return {
+          ...state,
+          currentStatus: "active",
+        };
+
+      case "finishQuiz":
+        return {
+          ...state,
+          currentStatus: "finished",
+        };
+
+      case "selected":
+        const question = state.data.at(state.index);
+        return {
+          ...state,
+          answer: action.payload,
+          userPoint:
+            action.payload === question.correctOption
+              ? state.userPoint + question.points
+              : state.userPoint,
+        };
+
+      case "nextQuestion":
+        return {
+          ...state,
+          index: state.index + 1,
+          answer: null,
+        };
+
+      default:
+        return state;
+    }
+  };
+
+  const [
+    { data, currentStatus, index, userPoint, answer, nickname },
+    dispatch,
+  ] = useReducer(reducer, initialState);
 
   useEffect(() => {
     const questionData = async () => {
@@ -23,11 +100,9 @@ function MainContext({ children }) {
       try {
         const response = await axios.get("http://localhost:9000/questions");
 
-        response.data.map((val) => {
-          dispatch({
-            type: "questionData",
-            payload: val.question,
-          });
+        dispatch({
+          type: "questionData",
+          payload: response.data,
         });
       } catch (error) {
         console.log(error);
@@ -40,34 +115,21 @@ function MainContext({ children }) {
     questionData();
   }, []);
 
-  ///// fetch question end
-
-  ///// reducer function start
-
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case "isLoading/start":
-        return console.log("yukleniyor");
-
-      case "isLoading/finish":
-        return console.log("yuklenme bitti");
-
-      case "questionData":
-        return {
-          ...state,
-          question: action.payload,
-        };
-    }
-
-    return state;
-  };
-
-  ///// reducer function end
-
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const questionLength = data.length;
 
   return (
-    <MainProvider.Provider value={{ initialState }}>
+    <MainProvider.Provider
+      value={{
+        data,
+        currentStatus,
+        index,
+        userPoint,
+        questionLength,
+        dispatch,
+        answer,
+        nickname,
+      }}
+    >
       {children}
     </MainProvider.Provider>
   );
