@@ -1,15 +1,14 @@
-import { useState, useContext } from "react";
 import "./index.css";
-
 import Header from "./components/header";
 import Progress from "./components/Progress";
 import Answers from "./components/Answers";
 import Question from "./components/question";
+import Finished from "./components/Finished";
 
-import { getData, MainContext } from "./contexts/MainContext";
+import { useData } from "./contexts/MainContext";
 
 function App() {
-  const { currentStatus } = getData();
+  const { currentStatus } = useData();
 
   return (
     <div className="flex items-center justify-center flex-col gap-6">
@@ -21,6 +20,8 @@ function App() {
           <Answers />
         </>
       )}
+
+      {currentStatus === "finished" && <Finished />}
     </div>
   );
 }

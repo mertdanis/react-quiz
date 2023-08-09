@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useContext, createContext } from "react";
+import { useEffect, useReducer, useContext, createContext } from "react";
 
 import axios from "axios";
 
@@ -14,12 +14,21 @@ const initialState = {
 
   loadingData: false,
   answer: null,
+  result: null,
+  time: 4,
+
   // intro, active, error, finished ==> 4
   currentStatus: "intro",
 };
 
 function MainContext({ children }) {
   const reducer = (state, action) => {
+    // const totalPoints = state.data.reduce((acc) => {}, 0);
+
+    // state.data.map((a) => {
+    //   console.log(a.points);
+    // });
+
     switch (action.type) {
       case "isLoading/start":
         return {
@@ -31,6 +40,13 @@ function MainContext({ children }) {
         return {
           ...state,
           loadingData: false,
+        };
+
+      case "timeInterval":
+        return {
+          ...state,
+          time: state.time !== 0 ? state.time - 1 : state.time,
+          currentStatus: state.time === 0 ? "finished" : state.currentStatus,
         };
 
       case "nickname":
@@ -48,7 +64,15 @@ function MainContext({ children }) {
       case "error":
         return {
           ...state,
-          currentStatus: error,
+          currentStatus: "error",
+        };
+
+      case "reset":
+        return {
+          ...state,
+          index: 0,
+
+          currentStatus: "active",
         };
 
       case "startQuiz":
@@ -63,7 +87,7 @@ function MainContext({ children }) {
           currentStatus: "finished",
         };
 
-      case "selected":
+      case "selected": {
         const question = state.data.at(state.index);
         return {
           ...state,
@@ -73,6 +97,7 @@ function MainContext({ children }) {
               ? state.userPoint + question.points
               : state.userPoint,
         };
+      }
 
       case "nextQuestion":
         return {
@@ -87,9 +112,13 @@ function MainContext({ children }) {
   };
 
   const [
-    { data, currentStatus, index, userPoint, answer, nickname },
+    { data, currentStatus, index, userPoint, answer, nickname, time },
     dispatch,
   ] = useReducer(reducer, initialState);
+
+  const totalPoints = data.reduce((total, item) => {
+    return total + item.points;
+  }, 0);
 
   useEffect(() => {
     const questionData = async () => {
@@ -128,6 +157,8 @@ function MainContext({ children }) {
         dispatch,
         answer,
         nickname,
+        time,
+        totalPoints,
       }}
     >
       {children}
@@ -135,9 +166,9 @@ function MainContext({ children }) {
   );
 }
 
-const getData = () => {
+const useData = () => {
   const context = useContext(MainProvider);
   return context;
 };
 
-export { MainContext, getData };
+export { MainContext, useData };
