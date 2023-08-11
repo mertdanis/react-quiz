@@ -15,7 +15,7 @@ const initialState = {
   loadingData: false,
   answer: null,
   result: null,
-  time: 4,
+  time: 500,
 
   // intro, active, error, finished ==> 4
   currentStatus: "intro",
@@ -23,12 +23,6 @@ const initialState = {
 
 function MainContext({ children }) {
   const reducer = (state, action) => {
-    // const totalPoints = state.data.reduce((acc) => {}, 0);
-
-    // state.data.map((a) => {
-    //   console.log(a.points);
-    // });
-
     switch (action.type) {
       case "isLoading/start":
         return {
@@ -64,6 +58,7 @@ function MainContext({ children }) {
       case "error":
         return {
           ...state,
+          errorMsg: action.payload,
           currentStatus: "error",
         };
 
@@ -78,7 +73,7 @@ function MainContext({ children }) {
       case "startQuiz":
         return {
           ...state,
-          currentStatus: "active",
+          currentStatus: state.currentStatus !== "error" ? "active" : "error",
         };
 
       case "finishQuiz":
@@ -112,7 +107,7 @@ function MainContext({ children }) {
   };
 
   const [
-    { data, currentStatus, index, userPoint, answer, nickname, time },
+    { data, currentStatus, index, userPoint, answer, nickname, time, errorMsg },
     dispatch,
   ] = useReducer(reducer, initialState);
 
@@ -135,6 +130,10 @@ function MainContext({ children }) {
         });
       } catch (error) {
         console.log(error);
+        dispatch({
+          type: "error",
+          payload: error.message,
+        });
       } finally {
         dispatch({
           type: "isLoading/finish",
@@ -159,6 +158,7 @@ function MainContext({ children }) {
         nickname,
         time,
         totalPoints,
+        errorMsg,
       }}
     >
       {children}

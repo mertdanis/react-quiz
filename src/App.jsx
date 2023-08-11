@@ -1,9 +1,10 @@
 import "./index.css";
 import Header from "./components/header";
-import Progress from "./components/Progress";
+import Progress from "./components/progress";
 import Answers from "./components/Answers";
 import Question from "./components/question";
 import Finished from "./components/Finished";
+import Error from "./components/Error";
 
 import { useData } from "./contexts/MainContext";
 
@@ -13,6 +14,9 @@ function App() {
   return (
     <div className="flex items-center justify-center flex-col gap-6">
       <Header />
+
+      {currentStatus === "error" && <Error />}
+
       {currentStatus === "active" && (
         <>
           <Progress />
@@ -20,7 +24,6 @@ function App() {
           <Answers />
         </>
       )}
-
       {currentStatus === "finished" && <Finished />}
     </div>
   );

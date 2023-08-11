@@ -1,7 +1,7 @@
 import { useData } from "../contexts/MainContext";
 
 function Progress() {
-  const { index, userPoint, nickname } = useData();
+  const { index, userPoint, nickname, questionLength } = useData();
 
   return (
     <div className="flex flex-col gap-4    w-4/12 mt-2 ">
@@ -10,7 +10,7 @@ function Progress() {
         disabled
         type="range"
         min={0}
-        max={15}
+        max={questionLength}
         value={index + 1}
       />
 
