@@ -4,7 +4,7 @@ function Progress() {
   const { index, userPoint, nickname, questionLength } = useData();
 
   return (
-    <div className="flex flex-col gap-4    w-4/12 mt-2 ">
+    <div className="flex flex-col gap-4   w-full sm:px-0 px-6 sm:w-4/12 mt-2 ">
       <input
         className="w-full  read-only cursor-default   rounded-lg appearance-none  dark:bg-cyan-700"
         disabled

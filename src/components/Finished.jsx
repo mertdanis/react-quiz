@@ -3,8 +3,6 @@ import { useData } from "../contexts/MainContext";
 function Finished() {
   const { userPoint, nickname, dispatch, totalPoints } = useData();
 
-  console.log(totalPoints);
-
   return (
     <>
       <p className="text-4xl tracking-widest mb-6 text-center my-4">THE END!</p>

@@ -12,7 +12,7 @@ function App() {
   const { currentStatus } = useData();
 
   return (
-    <div className="flex items-center justify-center flex-col gap-6">
+    <div className="flex items-center justify-center  flex-col gap-6">
       <Header />
 
       {currentStatus === "error" && <Error />}

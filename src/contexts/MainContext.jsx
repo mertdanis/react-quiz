@@ -4,6 +4,8 @@ import axios from "axios";
 
 const MainProvider = createContext();
 
+const SECS_PER_QUESTION = 30;
+
 const initialState = {
   data: [],
 
@@ -15,7 +17,7 @@ const initialState = {
   loadingData: false,
   answer: null,
   result: null,
-  time: 500,
+  time: null,
 
   // intro, active, error, finished ==> 4
   currentStatus: "intro",
@@ -64,9 +66,8 @@ function MainContext({ children }) {
 
       case "reset":
         return {
-          ...state,
-          index: 0,
-
+          ...initialState,
+          data: state.data,
           currentStatus: "active",
         };
 
@@ -74,6 +75,7 @@ function MainContext({ children }) {
         return {
           ...state,
           currentStatus: state.currentStatus !== "error" ? "active" : "error",
+          time: state.data.length * SECS_PER_QUESTION,
         };
 
       case "finishQuiz":
@@ -129,7 +131,6 @@ function MainContext({ children }) {
           payload: response.data,
         });
       } catch (error) {
-        console.log(error);
         dispatch({
           type: "error",
           payload: error.message,
