@@ -9,11 +9,7 @@ function Header() {
         className="
       flex flex-col sm:flex-row items-center gap-6 "
       >
-        <img
-          className="h-16 sm:h-24 "
-          src={"/public/imgs/logo.png"}
-          alt="Site Logo"
-        />
+        <img className="h-16 sm:h-24 " src={"/logo.png"} alt="Site Logo" />
         <h1 className="sm:text-6xl text-4xl text-cyan-400 font-bold  tracking-widest">
           The React Quiz
         </h1>
