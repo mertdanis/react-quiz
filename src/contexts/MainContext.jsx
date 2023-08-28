@@ -172,4 +172,6 @@ const useData = () => {
   return context;
 };
 
+console.log(useData);
+
 export { MainContext, useData };
