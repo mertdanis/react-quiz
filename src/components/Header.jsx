@@ -11,7 +11,7 @@ function Header() {
       >
         <img
           className="h-16 sm:h-24 "
-          src="../public/imgs/logo.png"
+          src={"/public/imgs/logo.png"}
           alt="Site Logo"
         />
         <h1 className="sm:text-6xl text-4xl text-cyan-400 font-bold  tracking-widest">
