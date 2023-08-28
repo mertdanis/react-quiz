@@ -1,8 +1,8 @@
 import "./index.css";
-import Header from "./components/header";
-import Progress from "./components/progress";
+import Header from "./components/Header";
+import Progress from "./components/Progress";
 import Answers from "./components/Answers";
-import Question from "./components/question";
+import Question from "./components/Question";
 import Finished from "./components/Finished";
 import Error from "./components/Error";
 
